@@ -5,12 +5,12 @@ from meal_and_workout_plan_generator import generate_workout_routine
 import database  # Import database logic
 
 
-st.write("🚀 App Started!")  # Debugging Step
+
 
 st.set_page_config(page_title="AI Diet & Workout Planner", layout="wide")
 
 st.title("🥗💪 AI-Based Diet & Workout Planner")
-
+st.write("🚀 App Started!")  # Debugging Step
 # 🎯 User Input Form
 with st.form("user_input"):
     age = st.number_input("Age", min_value=10, max_value=100, value=25)
