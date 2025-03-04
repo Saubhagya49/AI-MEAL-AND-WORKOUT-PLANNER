@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-from meal_plan import generate_meal_plan  # Import from meal_plan.py
-from workout_plan import generate_workout_routine  # Import from workout_plan.py
+from meal_&_workout_plan_generator import generate_meal_plan  # Import from meal_plan.py
+from meal_&_workout_plan_generator import generate_workout_routine  # Import from workout_plan.py
 import database  # Import database logic
 
 st.set_page_config(page_title="AI Diet & Workout Planner", layout="wide")
