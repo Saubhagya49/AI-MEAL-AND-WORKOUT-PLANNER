@@ -17,9 +17,10 @@ Original file is located at
 
 import sqlite3
 import pandas as pd
+import os
 
-# Connect to the database
-conn = sqlite3.connect("/content/fitness_planner(1).db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "fitness_planner(1).db")
+conn = sqlite3.connect(DB_PATH)
 
 # Load food data
 df_food = pd.read_sql_query("SELECT * FROM food;", conn)
@@ -68,7 +69,8 @@ import sqlite3
 import pandas as pd
 
 # Connect to the database
-conn = sqlite3.connect("/content/fitness_planner(1).db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "fitness_planner(1).db")
+conn = sqlite3.connect(DB_PATH)
 
 # Load workout data
 df_workout = pd.read_sql_query("SELECT * FROM exercise;", conn)
