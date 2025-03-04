@@ -11,7 +11,7 @@ import google.generativeai as genai
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # ✅ Use relative path for SQLite database
-db_path = os.path.join(BASE_DIR, "fitness_planner.db")
+db_path = os.path.join(BASE_DIR, "fitness_planner(1).db")
 
 # ✅ Load food data safely
 try:
