@@ -1,5 +1,13 @@
 import sqlite3
 
+# Get the current directory of the script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Correct the database path
+db_path = os.path.join(BASE_DIR, "fitness_planner(1).db")
+
+# Connect to SQLite
+conn = sqlite3.connect(db_path)
 def create_db():
     conn = sqlite3.connect("user_data.db")
     cursor = conn.cursor()
