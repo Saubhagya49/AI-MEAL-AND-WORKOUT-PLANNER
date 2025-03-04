@@ -13,7 +13,7 @@ Original file is located at
 ## MEAL PLAN GENERATOR
 """
 
-!pip install pandas openai
+
 
 import sqlite3
 import pandas as pd
