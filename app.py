@@ -4,6 +4,9 @@ from meal_and_workout_plan_generator import generate_meal_plan
 from meal_and_workout_plan_generator import generate_workout_routine  
 import database  # Import database logic
 
+
+st.write("🚀 App Started!")  # Debugging Step
+
 st.set_page_config(page_title="AI Diet & Workout Planner", layout="wide")
 
 st.title("🥗💪 AI-Based Diet & Workout Planner")
