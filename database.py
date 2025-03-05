@@ -31,6 +31,17 @@ def save_user_data(age, height, weight, goal, diet_type, equipment, experience_l
                    (age, height, weight, goal, diet_type, equipment, experience_level))  # Now 7 values
     conn.commit()
     conn.close()
+def get_user_data():
+    user_db_path = os.path.join(BASE_DIR, "user_data.db")
+    conn = sqlite3.connect(user_db_path)
+    cursor = conn.cursor()
+
+    # Fetch all user data
+    cursor.execute("SELECT * FROM users")
+    data = cursor.fetchall()
+
+    conn.close()
+    return data  # Returns a list of tuples
 
 # Create the user database on startup
 create_db()
