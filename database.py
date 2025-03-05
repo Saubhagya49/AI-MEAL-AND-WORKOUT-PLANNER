@@ -19,12 +19,12 @@ def create_db():
     conn.close()
 
 # Function to save user input into the database
-def save_user_data(age, gender, weight, height, goal, diet_type, equipment, calories,protein):
+def save_user_data(age, gender, weight, height, goal, diet_type, equipment):
     user_db_path = os.path.join(BASE_DIR, "user_data.db")
     conn = sqlite3.connect(user_db_path)
     cursor = conn.cursor()
     cursor.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
-                   (age, gender, weight, height, goal, diet_type, equipment, calories,protein))
+                   (age, gender, weight, height, goal, diet_type, equipment))
     conn.commit()
     conn.close()
 
