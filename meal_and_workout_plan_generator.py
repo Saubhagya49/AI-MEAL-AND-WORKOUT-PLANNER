@@ -32,8 +32,7 @@ conn.close()
 df_food.head()
 
 import google.generativeai as genai
-from google.colab import userdata
-ap=userdata.get('GOOGLE_API_KEY')
+ap = st.secrets["api"]["GOOGLE_API_KEY"]
 
 # 🔑 Set up API Key
 genai.configure(api_key=ap)
@@ -83,10 +82,10 @@ df_workout.head()
 
 import random
 import google.generativeai as genai
-from google.colab import userdata
+
 
 # 🔑 Configure Gemini AI
-ap = userdata.get('GOOGLE_API_KEY')
+ap = st.secrets["api"]["GOOGLE_API_KEY"]
 genai.configure(api_key=ap)
 
 # ✅ Use the latest Gemini model
