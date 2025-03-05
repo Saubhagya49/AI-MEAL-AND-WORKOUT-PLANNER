@@ -39,28 +39,61 @@ genai.configure(api_key=ap)
 
 # Use the latest available Gemini model
 model = genai.GenerativeModel("gemini-1.5-pro-latest")
-
-def generate_meal_plan(diet_type, calories, protein):
+def calculate_calories_and_protein(goal, age, height, weight, activity_level=1.55):
     """
-    Generate a meal plan using Gemini AI.
+    Calculate daily calorie and protein needs based on user inputs.
+
+    - `goal`: "musclegain", "maintainweight", or "bulkupfast"
+    - `age`: Age in years
+    - `height`: Height in cm
+    - `weight`: Weight in kg
+    - `activity_level`: Default to moderate (1.55)
     """
-    prompt = f"Suggest 3 high-protein {diet_type} meals under {calories} kcal."
+    # Mifflin-St Jeor BMR Formula
+    bmr = 10 * weight + 6.25 * height - 5 * age + 5  # (For males, use -161 for females)
 
-    try:
-        response = model.generate_content(prompt)  # Generate response
-        ai_meals = response.text.strip().split("\n")  # Process AI response
-        return ai_meals
-    except Exception as e:
-        print("❌ Error:", e)
-        return ["Error generating meal plan. Check API key & model availability."]
+    # Adjust for activity level
+    maintenance_calories = bmr * activity_level
 
-# Example usage
-meal_plan = generate_meal_plan(diet_type="Vegetarian", calories=2500, protein=150)
+    # Adjust based on goal
+    if goal == "musclegain":
+        total_calories = maintenance_calories + 300  # Small calorie surplus
+        protein_grams = weight * 1.6  # Moderate protein intake
+    elif goal == "bulkupfast":
+        total_calories = maintenance_calories + 600  # Large calorie surplus
+        protein_grams = weight * 2.0  # Higher protein intake
+    else:  # Maintain weight
+        total_calories = maintenance_calories
+        protein_grams = weight * 1.2  # Lower protein intake
 
-# Print meal plan
-print("🔹 Suggested Meal Plan:")
+    return int(total_calories), int(protein_grams)
+
+
+def generate_meal_plan(diet_type, goal, age, height, weight):
+    """
+    Generate a high-protein meal plan based on diet type, calorie needs, and protein target.
+    """
+    # Calculate Calories & Protein
+    calories, protein = calculate_calories_and_protein(goal, age, height, weight)
+
+    prompt = f"Suggest 3 high-protein Indian {diet_type} meals under {calories} kcal with at least {protein}g of protein per day."
+
+
+
+
+# Example Usage
+age = int(input("Enter your age: "))
+height = int(input("Enter your height (cm): "))
+weight = int(input("Enter your weight (kg): "))
+goal = input("Enter your goal (musclegain, maintainweight, bulkupfast): ").strip().lower()
+diet_type = input("Enter your diet type (Vegetarian, Non-Vegetarian, Vegan): ").strip().capitalize()
+
+meal_plan = generate_meal_plan(diet_type, goal, age, height, weight)
+
+# Print Meal Plan
+print("\n🍽️ Suggested Meal Plan:")
 for meal in meal_plan:
-    print(f"{meal}")
+    print(meal)
 
 """## WORKOUT PLAN GENERATOR"""
 
