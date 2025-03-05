@@ -83,10 +83,7 @@ def generate_meal_plan(diet_type, goal, age, height, weight):
 
 
 
-# Print Meal Plan
-print("\n🍽️ Suggested Meal Plan:")
-for meal in meal_plan:
-    print(meal)
+
 
 """## WORKOUT PLAN GENERATOR"""
 
