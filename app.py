@@ -24,8 +24,8 @@ with st.form("user_input"):
     diet_type = st.selectbox("🥗 Diet Preference", ["Vegetarian", "Non-Vegetarian", "Vegan"])
 
     # Workout Plan Inputs
-    equipment = st.selectbox("🏋️ Equipment Available", ["bodyweight", "dumbbell", "Full Gym"])
-    level = st.selectbox("📊 Experience Level", ["beginner", "intermediate", "advanced"])
+    equipment = st.selectbox("🏋️ Equipment Available", ["body only", "dumbbell", "Full Gym"])
+    level = st.selectbox("📊 Experience Level", ["beginner", "intermediate", "expert"])
 
     # 🎛️ Submit Button
     submitted = st.form_submit_button("🚀 Generate My Plan")
