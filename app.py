@@ -13,6 +13,18 @@ st.markdown("""
     🔥 Get a **custom meal & workout plan** based on your **goal, diet, and available equipment.**  
     Let's get started! 🚀
 """)
+# 📊 User Data Tracking Section
+st.header("📈 Track Your Saved Data")
+
+# Fetch data from the database
+user_data = database.get_user_data()
+
+# Display in a table if there is data
+if user_data:
+    df = pd.DataFrame(user_data, columns=["Age", "Height", "Weight", "Goal", "Diet", "Equipment", "Experience"])
+    st.dataframe(df)
+else:
+    st.warning("⚠️ No user data found! Generate a plan first.")
 
 # 📥 **User Input Form**
 with st.form("user_input"):
