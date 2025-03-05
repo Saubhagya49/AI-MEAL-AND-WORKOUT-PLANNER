@@ -16,10 +16,15 @@ Try it here 👉 [AI Meal & Workout Planner](https://ai-meal-and-workout-planner
 ---
 ## 📂 **Project Files**  
 📌 **`DATA_PREPROCESSING.ipynb`** → Jupyter Notebook for data processing
+
 📌 **`SQLite_database_Creation.ipynb`** → Jupyter Notebook for database creation 
+
 📌 **`adding_diet_type_column_to_food_table.ipynb`** → Jupyter Notebook for modifying the database
+
 📌 **`app.py`** → Streamlit app for real-time predictions  
+
 📌 **`database.py`** → To Store user-data  
+
 📌 **`meal_and_workout_plan_generator.py`** → Contains code for the generators  
 
 ---
