@@ -21,11 +21,11 @@ with st.form("user_input"):
     height = st.number_input("📏 Height (cm)", min_value=100, max_value=250, value=175)
     weight = st.number_input("⚖️ Weight (kg)", min_value=30, max_value=200, value=70)
     goal = st.selectbox("🎯 Fitness Goal", ["Maintain Weight", "Muscle Gain", "Bulk Up Fast"])
-    diet_type = st.selectbox("🥗 Diet Preference", ["Veg", "Non-Veg", "Vegan"])
+    diet_type = st.selectbox("🥗 Diet Preference", ["Vegetarian", "Non-Vegetarian", "Vegan"])
 
     # Workout Plan Inputs
-    equipment = st.selectbox("🏋️ Equipment Available", ["Bodyweight", "Dumbbells", "Full Gym"])
-    level = st.selectbox("📊 Experience Level", ["Beginner", "Intermediate", "Advanced"])
+    equipment = st.selectbox("🏋️ Equipment Available", ["bodyweight", "dumbbell", "Full Gym"])
+    level = st.selectbox("📊 Experience Level", ["beginner", "intermediate", "advanced"])
 
     # 🎛️ Submit Button
     submitted = st.form_submit_button("🚀 Generate My Plan")
