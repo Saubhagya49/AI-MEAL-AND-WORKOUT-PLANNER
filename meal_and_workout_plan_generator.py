@@ -76,10 +76,25 @@ def generate_meal_plan(diet_type, goal, age, height, weight):
     # Calculate Calories & Protein
     calories, protein = calculate_calories_and_protein(goal, age, height, weight)
 
-    prompt = f"Suggest 3 high-protein Indian {diet_type} meals under {calories} kcal with at least {protein}g of protein per day."
+    # Nutrition message
+    nutrition_message = f"✅ Based on your goal ({goal}), you need approximately **{calories} kcal** and **{protein}g of protein** per day."
 
+    # Generate AI prompt
+    prompt = f"""
+    Suggest a **high-protein Indian {diet_type} meal plan** with 3 meals per day.
+    - Total daily calories: {calories} kcal
+    - Total daily protein: {protein}g
+    - Meals should be well-balanced and include Indian food items.
+    """
 
+    # 🔥 Call Gemini AI for meal suggestions
+    response = model.generate_content(prompt)
 
+    # Extract AI response
+    meal_plan = response.text if response else "❌ Error: Could not generate meal plan."
+
+    # ✅ Return both the nutrition message and meal plan
+    return f"{nutrition_message}\n\n🍽 **Meal Plan:**\n{meal_plan}"
 
 
 
