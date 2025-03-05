@@ -1,30 +1,32 @@
 import os
 import sqlite3
 
-# Get the current directory of the script
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Correct the database path
-db_path = os.path.join(BASE_DIR, "fitness_planner.db")  # Removed (1) to avoid issues
 
 # Function to create the user database
 def create_db():
     user_db_path = os.path.join(BASE_DIR, "user_data.db")
     conn = sqlite3.connect(user_db_path)
     cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS users 
-                      (age INT, gender TEXT, weight INT, height INT, goal TEXT, 
-                      diet_type TEXT, equipment TEXT, caloric_surplus TEXT)''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+                        age INT, 
+                        height INT, 
+                        weight INT, 
+                        goal TEXT, 
+                        diet_type TEXT, 
+                        equipment TEXT, 
+                        experience_level TEXT
+                    )''')
     conn.commit()
     conn.close()
 
 # Function to save user input into the database
-def save_user_data(age, gender, weight, height, goal, diet_type, equipment):
+def save_user_data(age, height, weight, goal, diet_type, equipment, experience_level):
     user_db_path = os.path.join(BASE_DIR, "user_data.db")
     conn = sqlite3.connect(user_db_path)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 
-                   (age, gender, weight, height, goal, diet_type, equipment))
+    cursor.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)", 
+                   (age, height, weight, goal, diet_type, equipment, experience_level))  # Now 7 values
     conn.commit()
     conn.close()
 
