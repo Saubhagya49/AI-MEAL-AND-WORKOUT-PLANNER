@@ -101,7 +101,7 @@ muscle_group_mapping = {
     "Core": ["Abdominals"]
 }
 
-def generate_workout_routine(goal="Muscle Gain", equipment="Dumbbells", level="Intermediate"):
+def generate_workout_routine(goal, equipment, level):
     """Generate a structured workout plan with visually appealing formatting."""
 
     # ✅ Ensure dataset is valid
