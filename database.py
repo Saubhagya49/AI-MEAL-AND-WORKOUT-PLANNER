@@ -1,11 +1,14 @@
 import os
 import sqlite3
 
+# Get the current directory of the script
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# Database path
+user_db_path = os.path.join(BASE_DIR, "user_data.db")
 
 # Function to create the user database
 def create_db():
-    user_db_path = os.path.join(BASE_DIR, "user_data.db")
     conn = sqlite3.connect(user_db_path)
     cursor = conn.cursor()
     cursor.execute('''CREATE TABLE IF NOT EXISTS users (
@@ -22,7 +25,6 @@ def create_db():
 
 # Function to save user input into the database
 def save_user_data(age, height, weight, goal, diet_type, equipment, experience_level):
-    user_db_path = os.path.join(BASE_DIR, "user_data.db")
     conn = sqlite3.connect(user_db_path)
     cursor = conn.cursor()
     cursor.execute("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)", 
