@@ -81,7 +81,7 @@ def generate_meal_plan(diet_type, goal, age, height, weight):
 
 
 
-meal_plan = generate_meal_plan(diet_type, goal, age, height, weight)
+
 
 # Print Meal Plan
 print("\n🍽️ Suggested Meal Plan:")
