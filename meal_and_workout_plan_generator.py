@@ -81,13 +81,6 @@ def generate_meal_plan(diet_type, goal, age, height, weight):
 
 
 
-# Example Usage
-age = int(input("Enter your age: "))
-height = int(input("Enter your height (cm): "))
-weight = int(input("Enter your weight (kg): "))
-goal = input("Enter your goal (musclegain, maintainweight, bulkupfast): ").strip().lower()
-diet_type = input("Enter your diet type (Vegetarian, Non-Vegetarian, Vegan): ").strip().capitalize()
-
 meal_plan = generate_meal_plan(diet_type, goal, age, height, weight)
 
 # Print Meal Plan
