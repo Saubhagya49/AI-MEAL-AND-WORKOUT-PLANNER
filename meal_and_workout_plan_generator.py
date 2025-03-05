@@ -30,7 +30,7 @@ conn.close()
 
 # Display first 5 rows
 df_food.head()
-
+import streamlit as st
 import google.generativeai as genai
 ap = st.secrets["api"]["GOOGLE_API_KEY"]
 
