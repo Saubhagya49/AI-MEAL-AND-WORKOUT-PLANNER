@@ -167,7 +167,9 @@ def generate_workout_routine(goal, equipment, level):
     workout_plan = {}
     for group, muscles in muscle_group_mapping.items():
         muscle_workouts = filtered_workouts[filtered_workouts["bodypart"].isin(muscles)]["title"]
-        workout_plan[group] = muscle_workouts.sample(2).tolist() if not muscle_workouts.empty else ["❌ No exercises found"]
+       # Set desired workout count (adjust as needed)
+desired_workout_count = min(5, len(muscle_workouts))  # Takes up to 5 workouts
+workout_plan[group] = muscle_workouts.sample(desired_workout_count).tolist() if not muscle_workouts.empty else []
 
     # ✅ Create a well-structured output
     formatted_workout_plan = "\n\n".join(
