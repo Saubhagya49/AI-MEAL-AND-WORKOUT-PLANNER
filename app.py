@@ -43,6 +43,10 @@ if user_id:
         meal_plan = generate_meal_plan(diet_type, goal, age, height, weight)
         workout_plan = generate_workout_routine(goal, equipment, level)
 
+        # 🔍 **Debugging: Print meal_plan structure**
+        st.text("Meal Plan Debug Output:")
+        st.write(meal_plan)  # Display raw data for debugging
+
         # 🛑 **Fix: Check & Convert Meal Plan Format**
         if isinstance(meal_plan, list) and all(isinstance(meal, dict) for meal in meal_plan):
             meal_df = pd.DataFrame(meal_plan)  # Convert list of dicts to DataFrame
