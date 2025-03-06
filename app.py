@@ -43,22 +43,22 @@ if user_id:
         meal_plan = generate_meal_plan(diet_type, goal, age, height, weight)
         workout_plan = generate_workout_routine(goal, equipment, level)
 
-        # 🛑 **Error Handling for Meal Plan**
-        if not isinstance(meal_plan, list):
-            st.error("⚠️ Error: Meal plan is not in the expected format!")
+        # 🛑 **Fix: Check & Convert Meal Plan Format**
+        if isinstance(meal_plan, list) and all(isinstance(meal, dict) for meal in meal_plan):
+            meal_df = pd.DataFrame(meal_plan)  # Convert list of dicts to DataFrame
+        elif isinstance(meal_plan, list) and all(isinstance(meal, (list, tuple)) and len(meal) == 2 for meal in meal_plan):
+            meal_df = pd.DataFrame(meal_plan, columns=["Meal", "Food Items"])  # Convert list of lists/tuples
         else:
-            try:
-                meal_df = pd.DataFrame(meal_plan)
-                if meal_df.empty:
-                    st.warning("⚠️ No meal plan generated. Try changing your preferences.")
-                else:
-                    # 📊 Display **Meal Plan**
-                    st.header("🍽️ Your Personalized Meal Plan")
-                    st.table(meal_df)
-            except Exception as e:
-                st.error(f"⚠️ Error displaying meal plan: {e}")
+            meal_df = None  # Invalid format
 
-        # 🏋️ **Workout Plan Section**
+        # 📊 **Display Meal Plan**
+        st.header("🍽️ Your Personalized Meal Plan")
+        if meal_df is not None and not meal_df.empty:
+            st.table(meal_df)
+        else:
+            st.warning("⚠️ No meal plan generated. Try changing your preferences.")
+
+        # 🏋️ **Display Workout Plan**
         st.header("💪 Your Personalized Workout Plan")
         if isinstance(workout_plan, str):
             st.markdown(workout_plan, unsafe_allow_html=True)
