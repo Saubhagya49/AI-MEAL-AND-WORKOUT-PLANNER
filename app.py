@@ -36,10 +36,10 @@ if user_id:
                                 index=["Maintain Weight", "Muscle Gain", "Bulk Up Fast"].index(user_data[3]) if user_data else 0)
             diet_type = st.selectbox("🥗 Diet Preference", ["Vegetarian", "Non-Vegetarian", "Vegan"], 
                                      index=["Vegetarian", "Non-Vegetarian", "Vegan"].index(user_data[4]) if user_data else 0)
-            equipment = st.selectbox("🏋️ Equipment Available", ["Bodyweight Only", "Dumbbells", "Full Gym"], 
+            equipment = st.selectbox("🏋️ Equipment Available", ["body only", "dumbbell", "Full Gym"], 
                                      index=["body only", "dumbbell", "Full Gym"].index(user_data[5]) if user_data else 0)
 
-        level = st.selectbox("📊 Experience Level", ["Beginner", "Intermediate", "Expert"], 
+        level = st.selectbox("📊 Experience Level", ["beginner", "intermediate", "expert"], 
                              index=["beginner", "intermediate", "expert"].index(user_data[6]) if user_data else 0)
 
         # 🎛️ Submit Button
