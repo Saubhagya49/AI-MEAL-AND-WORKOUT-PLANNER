@@ -37,10 +37,10 @@ if user_id:
             diet_type = st.selectbox("🥗 Diet Preference", ["Vegetarian", "Non-Vegetarian", "Vegan"], 
                                      index=["Vegetarian", "Non-Vegetarian", "Vegan"].index(user_data[4]) if user_data else 0)
             equipment = st.selectbox("🏋️ Equipment Available", ["Bodyweight Only", "Dumbbells", "Full Gym"], 
-                                     index=["Bodyweight Only", "Dumbbells", "Full Gym"].index(user_data[5]) if user_data else 0)
+                                     index=["body only", "dumbbell", "Full Gym"].index(user_data[5]) if user_data else 0)
 
         level = st.selectbox("📊 Experience Level", ["Beginner", "Intermediate", "Expert"], 
-                             index=["Beginner", "Intermediate", "Expert"].index(user_data[6]) if user_data else 0)
+                             index=["beginner", "intermediate", "expert"].index(user_data[6]) if user_data else 0)
 
         # 🎛️ Submit Button
         submitted = st.form_submit_button("🚀 Generate My Plan")
