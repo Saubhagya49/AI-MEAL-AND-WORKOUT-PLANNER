@@ -47,7 +47,7 @@ if user_id:
         # 📊 Display **Meal Plan**
         st.header("🍽️ Personalized Meal Plan")
         for meal in meal_plan:
-            st.write(f"✅ {meal}")
+            st.write(f"{meal}")
 
         # 🏋️ Display **Workout Plan**
         st.header("💪 Personalized Workout Plan")
