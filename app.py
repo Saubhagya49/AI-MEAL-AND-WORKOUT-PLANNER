@@ -24,23 +24,24 @@ with col1:
     weight = st.number_input("⚖️ Weight (kg)", min_value=30, max_value=200, value=70)
     goal = st.selectbox("🎯 Fitness Goal", ["Maintain Weight", "Muscle Gain", "Bulk Up Fast"])
     diet_type = st.selectbox("🥗 Diet Preference", ["Vegetarian", "Non-Vegetarian", "Vegan"])
-  equipment_map = {
-    "💪 Bodyweight (No Equipment)": "body only",
-    "🏋️ Dumbbells at Home": "dumbbell",
-    "🏢 Full Gym Access": "Full Gym"
-}
 
-equipment = equipment_map[st.selectbox("🏋️ Equipment Available", list(equipment_map))]
+    # 🎛️ **User-Friendly Equipment Selection**
+    equipment_map = {
+        "💪 Bodyweight (No Equipment)": "body only",
+        "🏋️ Dumbbells at Home": "dumbbell",
+        "🏢 Full Gym Access": "Full Gym"
+    }
+    equipment = equipment_map[st.selectbox("🏋️ Equipment Available", list(equipment_map.keys()))]
 
+    # 🎛️ **User-Friendly Experience Level Selection**
     level_map = {
-    "🌱 Beginner (New to Fitness)": "beginner",
-    "💪 Intermediate (Some Experience)": "intermediate",
-    "🔥 Expert (Advanced Training)": "expert"
-}
+        "🌱 Beginner (New to Fitness)": "beginner",
+        "💪 Intermediate (Some Experience)": "intermediate",
+        "🔥 Expert (Advanced Training)": "expert"
+    }
+    level = level_map[st.selectbox("📊 Experience Level", list(level_map.keys()))]
 
-level = level_map[st.selectbox("📊 Experience Level", list(level_map))]
-
-    
+    # 🚀 **Generate Plan**
     if st.button("🚀 Generate My Plan"):
         meal_plan = generate_meal_plan(diet_type, goal, age, height, weight)
         workout_plan = generate_workout_routine(goal, equipment, level)
@@ -55,7 +56,8 @@ level = level_map[st.selectbox("📊 Experience Level", list(level_map))]
         st.subheader("💪 Personalized Workout Plan")
         st.markdown(workout_plan, unsafe_allow_html=True)
         
-        # 🔘 **Ask if the user wants to save**
+        # 💾 **Save Plan Options**
+        st.subheader("💾 Save Your Plan?")
         save_choice = st.radio("Choose what you want to save:", ["Don't Save", "Meal Plan Only", "Workout Plan Only", "Save Both"])
         if st.button("💾 Confirm Save"):
             if save_choice == "Meal Plan Only":
