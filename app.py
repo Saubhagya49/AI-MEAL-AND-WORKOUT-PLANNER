@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import time
 from meal_and_workout_plan_generator import generate_meal_plan, generate_workout_routine
 import database  # Import database functions
 
@@ -15,52 +14,53 @@ st.markdown("""
 """)
 
 # 📌 **Option to View Saved Plans**
-user_id = st.text_input("🔑 Enter Your Username or Email to View Plans", key="user_input")
+if st.button("📂 View My Saved Plans"):
+    user_id = st.text_input("🔑 Enter Your Username or Email to View Plans")
+    
+    if user_id:
+        user_data = database.get_user_data(user_id)
+        
+        if user_data:
+            st.session_state["user_id"] = user_id  # Store for later use
+            st.session_state["user_data"] = user_data
+            st.session_state["view_saved"] = True  # Enable full screen mode
+        else:
+            st.warning("⚠️ No data found for this user!")
 
-if user_id:
-    user_data = database.get_user_data(user_id)
-
-    if user_data:
-        st.session_state["user_id"] = user_id
-        st.session_state["user_data"] = user_data
-        st.success(f"✅ Welcome back, **{user_id}**! Your saved data is loaded.")
-    else:
-        st.warning("⚠️ No data found for this user. You can generate a new plan below.")
-
-# 🚀 **Show Saved Plans & User Details (if logged in)**
-if "user_id" in st.session_state:
+# 🚀 **Show Full Screen After Login**
+if "view_saved" in st.session_state and st.session_state["view_saved"]:
     user_id = st.session_state["user_id"]
     user_data = st.session_state["user_data"]
 
-    st.header(f"🔑 Logged in as **{user_id}**")
+    st.header(f"🔑 Logged in as {user_id}")
     
     # 📊 Show saved details
-    with st.expander("📊 View Your Saved Details", expanded=True):
-        st.markdown(f"""
-        - **Age:** {user_data[0]}  
-        - **Height:** {user_data[1]} cm  
-        - **Weight:** {user_data[2]} kg  
-        - **Goal:** {user_data[3]}  
-        - **Diet:** {user_data[4]}  
-        - **Equipment:** {user_data[5]}  
-        - **Experience Level:** {user_data[6]}  
-        """)
+    st.subheader("📊 Your Saved Data")
+    st.markdown(f"""
+    - **Age:** {user_data[0]}  
+    - **Height:** {user_data[1]} cm  
+    - **Weight:** {user_data[2]} kg  
+    - **Goal:** {user_data[3]}  
+    - **Diet:** {user_data[4]}  
+    - **Equipment:** {user_data[5]}  
+    - **Experience Level:** {user_data[6]}  
+    """)
 
     # 🏋️ Show existing saved plans
     saved_meal_plan = database.get_meal_plan(user_id)
     saved_workout_plan = database.get_workout_plan(user_id)
 
     if saved_meal_plan:
-        with st.expander("🍽️ View Your Saved Meal Plan", expanded=True):
-            for meal, food_items in saved_meal_plan:
-                st.markdown(f"🍽️ **{meal}:** {food_items}")
+        st.subheader("🍽️ Your Saved Meal Plan")
+        for meal, food_items in saved_meal_plan:
+            st.markdown(f"🍽️ **{meal}:** {food_items}")
 
     if saved_workout_plan:
-        with st.expander("💪 View Your Saved Workout Plan", expanded=True):
-            st.markdown(saved_workout_plan, unsafe_allow_html=True)
+        st.subheader("💪 Your Saved Workout Plan")
+        st.markdown(saved_workout_plan, unsafe_allow_html=True)
 
     # 📥 **Option to Generate a New Plan**
-    if st.button("🚀 Generate New Plan", key="generate_new_plan"):
+    if st.button("🚀 Generate New Plan"):
         st.session_state["generate_plan"] = True
 
 # ✅ **Generate New Plan**
@@ -79,19 +79,16 @@ if "generate_plan" in st.session_state and st.session_state["generate_plan"]:
                                 index=["Maintain Weight", "Muscle Gain", "Bulk Up Fast"].index(user_data[3]))
             diet_type = st.selectbox("🥗 Diet Preference", ["Vegetarian", "Non-Vegetarian", "Vegan"], 
                                      index=["Vegetarian", "Non-Vegetarian", "Vegan"].index(user_data[4]))
-            equipment = st.selectbox("🏋️ Equipment Available", ["body only", "dumbbell", "Full Gym"], 
+            equipment = st.selectbox("🏋️ Equipment Available", ["Bodyweight Only", "Dumbbells", "Full Gym"], 
                                      index=["Bodyweight Only", "Dumbbells", "Full Gym"].index(user_data[5]))
 
-        level = st.selectbox("📊 Experience Level", ["beginner", "intermediate", "expert"], 
+        level = st.selectbox("📊 Experience Level", ["Beginner", "Intermediate", "Expert"], 
                              index=["Beginner", "Intermediate", "Expert"].index(user_data[6]))
 
         submitted = st.form_submit_button("🚀 Generate My Plan")
 
     # **Generate Plans**
     if submitted:
-        st.info("⏳ Generating your personalized plans... Please wait.")
-        time.sleep(2)  # Simulating loading time
-
         meal_plan = generate_meal_plan(diet_type, goal, age, height, weight)
         workout_plan = generate_workout_routine(goal, equipment, level)
 
@@ -117,22 +114,15 @@ if "generate_plan" in st.session_state and st.session_state["generate_plan"]:
         save_choice = st.radio("Choose what you want to save:", 
                                ["Don't Save", "Meal Plan Only", "Workout Plan Only", "Save Both"])
 
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button("💾 Save Plan", key="save_plan"):
-                if save_choice == "Meal Plan Only":
-                    database.save_meal_plan(user_id, meal_plan)
-                    st.success("🍽️ Meal Plan saved successfully!")
-                elif save_choice == "Workout Plan Only":
-                    database.save_workout_plan(user_id, workout_plan)
-                    st.success("💪 Workout Plan saved successfully!")
-                elif save_choice == "Save Both":
-                    database.save_meal_plan(user_id, meal_plan)
-                    database.save_workout_plan(user_id, workout_plan)
-                    st.success("✅ Both Meal & Workout Plans saved successfully!")
-
-        with col2:
-            if st.button("🛠 Modify Plan", key="modify_plan"):
-                st.session_state["generate_plan"] = True
-                st.experimental_rerun()  # Refresh to allow modifications
+        if st.button("💾 Confirm Save"):
+            if save_choice == "Meal Plan Only":
+                database.save_meal_plan(user_id, meal_plan)
+                st.success("🍽️ Meal Plan saved successfully!")
+            elif save_choice == "Workout Plan Only":
+                database.save_workout_plan(user_id, workout_plan)
+                st.success("💪 Workout Plan saved successfully!")
+            elif save_choice == "Save Both":
+                database.save_meal_plan(user_id, meal_plan)
+                database.save_workout_plan(user_id, workout_plan)
+                st.success("✅ Both Meal & Workout Plans saved successfully!")
 
