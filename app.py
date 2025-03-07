@@ -48,11 +48,9 @@ with col1:
 
         # 🍽️ **Display Meal Plan**
         st.subheader("🍽️ Personalized Meal Plan")
-        if isinstance(meal_plan, list) and all(isinstance(meal, (list, tuple)) and len(meal) == 2 for meal in meal_plan):
+        if isinstance(meal_plan, list):
             for meal, food_items in meal_plan:
                 st.markdown(f"🍽️ **{meal}:** {food_items}")
-        elif isinstance(meal_plan, str):
-            st.markdown(meal_plan)
         else:
             st.warning("⚠️ No meal plan generated. Try changing your preferences.")
 
@@ -60,31 +58,41 @@ with col1:
         st.subheader("💪 Personalized Workout Plan")
         st.markdown(workout_plan, unsafe_allow_html=True)
 
-        # 💾 Save Plan Button (Shows Username Input)
+        # 💾 Save Plan Button (Shows Save Options First)
         if st.button("💾 Save This Plan"):
-            st.session_state["show_user_input"] = True
+            st.session_state["show_save_options"] = True
 
-    # **Show Username Input only when Save is clicked**
-    if st.session_state.get("show_user_input", False):
+    # **Step 1: Show Save Options First**
+    if st.session_state.get("show_save_options", False):
+        save_choice = st.radio("What do you want to save?", ["Meal Plan Only", "Workout Plan Only", "Save Both"])
+        st.session_state["save_choice"] = save_choice  # Store choice in session state
+
+        if save_choice:  # Only show username input if an option is selected
+            st.session_state["show_username_input"] = True
+
+    # **Step 2: Ask for Username After Selecting Save Option**
+    if st.session_state.get("show_username_input", False):
         user_id = st.text_input("🔑 Enter Your Username or Email to Save Plan")
-        save_choice = st.radio("Choose what you want to save:", ["Meal Plan Only", "Workout Plan Only", "Save Both"])
 
         if st.button("✅ Confirm Save"):
-            if save_choice == "Meal Plan Only":
-                database.save_meal_plan(user_id, meal_plan)
-                st.success("🍽️ Meal Plan saved successfully!")
-            elif save_choice == "Workout Plan Only":
-                database.save_workout_plan(user_id, workout_plan)
-                st.success("💪 Workout Plan saved successfully!")
-            elif save_choice == "Save Both":
-                database.save_meal_plan(user_id, meal_plan)
-                database.save_workout_plan(user_id, workout_plan)
-                st.success("✅ Both Meal & Workout Plans saved successfully!")
+            if user_id.strip() == "":
+                st.warning("⚠️ Please enter a valid username or email.")
+            else:
+                # Save based on user selection
+                if st.session_state["save_choice"] == "Meal Plan Only":
+                    database.save_meal_plan(user_id, meal_plan)
+                    st.success("🍽️ Meal Plan saved successfully!")
+                elif st.session_state["save_choice"] == "Workout Plan Only":
+                    database.save_workout_plan(user_id, workout_plan)
+                    st.success("💪 Workout Plan saved successfully!")
+                elif st.session_state["save_choice"] == "Save Both":
+                    database.save_meal_plan(user_id, meal_plan)
+                    database.save_workout_plan(user_id, workout_plan)
+                    st.success("✅ Both Meal & Workout Plans saved successfully!")
 
 with col2:
     st.subheader("📂 View My Saved Plans")
 
-    # Show username input only when "View Saved Plans" is clicked
     if st.button("👀 View Saved Plans"):
         st.session_state["show_saved_input"] = True
 
