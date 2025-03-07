@@ -47,13 +47,13 @@ with col1:
         st.success("✅ Your plan has been successfully generated!")
 
           st.header("🍽️ Personalized Meal Plan")
-        if isinstance(meal_plan, list) and all(isinstance(meal, (list, tuple)) and len(meal) == 2 for meal in meal_plan):
-            for meal, food_items in meal_plan:
-                st.markdown(f"🍽️ **{meal}:** {food_items}")
-        elif isinstance(meal_plan, str):
-            st.markdown(meal_plan)
-        else:
-            st.warning("⚠️ No meal plan generated. Try changing your preferences.")
+    if isinstance(meal_plan, list) and all(isinstance(meal, (list, tuple)) and len(meal) == 2 for meal in meal_plan):
+        for meal, food_items in meal_plan:
+            st.markdown(f"🍽️ **{meal}:** {food_items}")
+    elif isinstance(meal_plan, str):
+        st.markdown(meal_plan)
+    else:
+        st.warning("⚠️ No meal plan generated. Try changing your preferences.")
         
         # 🏋️ **Display Workout Plan**
         st.subheader("💪 Personalized Workout Plan")
