@@ -47,7 +47,7 @@ with col1:
         st.session_state["show_plans"] = True  # Store flag to show generated plans
 
 # ✅ **Step 1: Display Generated Plan (Persist after button clicks)**
-if st.session_state.get("show_plans", False):
+if st.session_state.get("show_plans", True):
     st.subheader("🍽️ Personalized Meal Plan")
     meal_plan = st.session_state.get("meal_plan", [])
 
