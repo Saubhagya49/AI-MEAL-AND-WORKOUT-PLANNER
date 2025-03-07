@@ -18,7 +18,6 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("📥 Generate a New Plan")
-    user_id = st.text_input("🔑 Enter Your Username or Email")
     age = st.number_input("📅 Age", min_value=10, max_value=100, value=25)
     height = st.number_input("📏 Height (cm)", min_value=100, max_value=250, value=170)
     weight = st.number_input("⚖️ Weight (kg)", min_value=30, max_value=200, value=70)
@@ -56,10 +55,16 @@ with col1:
         st.subheader("💪 Personalized Workout Plan")
         st.markdown(workout_plan, unsafe_allow_html=True)
         
-        # 💾 **Save Plan Options**
-        st.subheader("💾 Save Your Plan?")
-        save_choice = st.radio("Choose what you want to save:", ["Don't Save", "Meal Plan Only", "Workout Plan Only", "Save Both"])
-        if st.button("💾 Confirm Save"):
+        # 💾 **Save Plan Button (Shows Username Input)**
+        if st.button("💾 Save This Plan"):
+            st.session_state["show_user_input"] = True
+
+    # **Show Username Input only when Save is clicked**
+    if "show_user_input" in st.session_state and st.session_state["show_user_input"]:
+        user_id = st.text_input("🔑 Enter Your Username or Email to Save Plan")
+        save_choice = st.radio("Choose what you want to save:", ["Meal Plan Only", "Workout Plan Only", "Save Both"])
+        
+        if st.button("✅ Confirm Save"):
             if save_choice == "Meal Plan Only":
                 database.save_meal_plan(user_id, meal_plan)
                 st.success("🍽️ Meal Plan saved successfully!")
@@ -73,15 +78,23 @@ with col1:
 
 with col2:
     st.subheader("📂 View My Saved Plans")
-    if user_id:
-        user_data = database.get_user_data(user_id)
-        if user_data:
-            st.session_state["user_id"] = user_id  
-            st.session_state["user_data"] = user_data
-            st.session_state["view_saved"] = True  
-        else:
-            st.warning("⚠️ No data found for this user!")
     
+    # Show username input only when "View Saved Plans" is clicked
+    if st.button("👀 View Saved Plans"):
+        st.session_state["show_saved_input"] = True
+
+    if "show_saved_input" in st.session_state and st.session_state["show_saved_input"]:
+        user_id = st.text_input("🔑 Enter Your Username or Email to Retrieve Plans")
+        
+        if st.button("📂 Retrieve My Plans"):
+            user_data = database.get_user_data(user_id)
+            if user_data:
+                st.session_state["user_id"] = user_id  
+                st.session_state["user_data"] = user_data
+                st.session_state["view_saved"] = True  
+            else:
+                st.warning("⚠️ No data found for this user!")
+
     if "view_saved" in st.session_state and st.session_state["view_saved"]:
         user_id = st.session_state["user_id"]
         user_data = st.session_state["user_data"]
