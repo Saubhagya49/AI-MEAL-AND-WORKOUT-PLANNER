@@ -24,7 +24,7 @@ with col1:
     goal = st.selectbox("🎯 Fitness Goal", ["Maintain Weight", "Muscle Gain", "Bulk Up Fast"])
     diet_type = st.selectbox("🥗 Diet Preference", ["Vegetarian", "Non-Vegetarian", "Vegan"])
 
-    # 🎛️ **User-Friendly Equipment Selection**
+    # 🎛️ **Equipment Selection**
     equipment_map = {
         "💪 Bodyweight (No Equipment)": "body only",
         "🏋️ Dumbbells at Home": "dumbbell",
@@ -32,7 +32,7 @@ with col1:
     }
     equipment = equipment_map[st.selectbox("🏋️ Equipment Available", list(equipment_map.keys()))]
 
-    # 🎛️ **User-Friendly Experience Level Selection**
+    # 🎛️ **Experience Level Selection**
     level_map = {
         "🌱 Beginner (New to Fitness)": "beginner",
         "💪 Intermediate (Some Experience)": "intermediate",
@@ -42,53 +42,55 @@ with col1:
 
     # 🚀 **Generate Plan**
     if st.button("🚀 Generate My Plan"):
-        meal_plan = generate_meal_plan(diet_type, goal, age, height, weight)
-        workout_plan = generate_workout_routine(goal, equipment, level)
-        st.success("✅ Your plan has been successfully generated!")
+        st.session_state["meal_plan"] = generate_meal_plan(diet_type, goal, age, height, weight)
+        st.session_state["workout_plan"] = generate_workout_routine(goal, equipment, level)
+        st.session_state["show_plans"] = True  # Store flag to show generated plans
 
-        # 🍽️ **Display Meal Plan**
-        st.subheader("🍽️ Personalized Meal Plan")
-        if isinstance(meal_plan, list):
-            for meal, food_items in meal_plan:
-                st.markdown(f"🍽️ **{meal}:** {food_items}")
+# ✅ **Step 1: Display Generated Plan (Persist after button clicks)**
+if st.session_state.get("show_plans", False):
+    st.subheader("🍽️ Personalized Meal Plan")
+    meal_plan = st.session_state.get("meal_plan", [])
+
+    if isinstance(meal_plan, list):
+        for meal, food_items in meal_plan:
+            st.markdown(f"🍽️ **{meal}:** {food_items}")
+    else:
+        st.warning("⚠️ No meal plan generated. Try changing your preferences.")
+
+    st.subheader("💪 Personalized Workout Plan")
+    st.markdown(st.session_state.get("workout_plan", ""), unsafe_allow_html=True)
+
+    # 💾 **Save Plan Button**
+    if st.button("💾 Save This Plan"):
+        st.session_state["show_save_options"] = True
+
+# ✅ **Step 2: Ask What to Save**
+if st.session_state.get("show_save_options", False):
+    save_choice = st.radio("What do you want to save?", ["Meal Plan Only", "Workout Plan Only", "Save Both"])
+    st.session_state["save_choice"] = save_choice  # Store in session state
+
+    if save_choice:
+        st.session_state["show_username_input"] = True
+
+# ✅ **Step 3: Ask for Username**
+if st.session_state.get("show_username_input", False):
+    user_id = st.text_input("🔑 Enter Your Username or Email to Save Plan")
+
+    if st.button("✅ Confirm Save"):
+        if not user_id.strip():
+            st.warning("⚠️ Please enter a valid username or email.")
         else:
-            st.warning("⚠️ No meal plan generated. Try changing your preferences.")
-
-        # 🏋️ **Display Workout Plan**
-        st.subheader("💪 Personalized Workout Plan")
-        st.markdown(workout_plan, unsafe_allow_html=True)
-
-        # 💾 Save Plan Button (Shows Save Options First)
-        if st.button("💾 Save This Plan"):
-            st.session_state["show_save_options"] = True
-
-    # **Step 1: Show Save Options First**
-    if st.session_state.get("show_save_options", False):
-        save_choice = st.radio("What do you want to save?", ["Meal Plan Only", "Workout Plan Only", "Save Both"])
-        st.session_state["save_choice"] = save_choice  # Store choice in session state
-
-        if save_choice:  # Only show username input if an option is selected
-            st.session_state["show_username_input"] = True
-
-    # **Step 2: Ask for Username After Selecting Save Option**
-    if st.session_state.get("show_username_input", False):
-        user_id = st.text_input("🔑 Enter Your Username or Email to Save Plan")
-
-        if st.button("✅ Confirm Save"):
-            if user_id.strip() == "":
-                st.warning("⚠️ Please enter a valid username or email.")
-            else:
-                # Save based on user selection
-                if st.session_state["save_choice"] == "Meal Plan Only":
-                    database.save_meal_plan(user_id, meal_plan)
-                    st.success("🍽️ Meal Plan saved successfully!")
-                elif st.session_state["save_choice"] == "Workout Plan Only":
-                    database.save_workout_plan(user_id, workout_plan)
-                    st.success("💪 Workout Plan saved successfully!")
-                elif st.session_state["save_choice"] == "Save Both":
-                    database.save_meal_plan(user_id, meal_plan)
-                    database.save_workout_plan(user_id, workout_plan)
-                    st.success("✅ Both Meal & Workout Plans saved successfully!")
+            # Save plan based on user selection
+            if st.session_state["save_choice"] == "Meal Plan Only":
+                database.save_meal_plan(user_id, st.session_state["meal_plan"])
+                st.success("🍽️ Meal Plan saved successfully!")
+            elif st.session_state["save_choice"] == "Workout Plan Only":
+                database.save_workout_plan(user_id, st.session_state["workout_plan"])
+                st.success("💪 Workout Plan saved successfully!")
+            elif st.session_state["save_choice"] == "Save Both":
+                database.save_meal_plan(user_id, st.session_state["meal_plan"])
+                database.save_workout_plan(user_id, st.session_state["workout_plan"])
+                st.success("✅ Both Meal & Workout Plans saved successfully!")
 
 with col2:
     st.subheader("📂 View My Saved Plans")
