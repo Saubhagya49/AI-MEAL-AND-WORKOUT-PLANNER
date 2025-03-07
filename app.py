@@ -47,15 +47,9 @@ with col1:
         st.session_state["show_plans"] = True  # Store flag to show generated plans
 
 # ✅ **Step 1: Display Generated Plan (Persist after button clicks)**
-if st.session_state.get("show_plans", True):
+if st.session_state.get("show_plans", False):
     st.subheader("🍽️ Personalized Meal Plan")
-    meal_plan = st.session_state.get("meal_plan", [])
-
-    if isinstance(meal_plan, list):
-        for meal, food_items in meal_plan:
-            st.markdown(f"🍽️ **{meal}:** {food_items}")
-    else:
-        st.warning("⚠️ No meal plan generated. Try changing your preferences.")
+    st.markdown(st.session_state.get("meal_plan", ""), unsafe_allow_html=True)
 
     st.subheader("💪 Personalized Workout Plan")
     st.markdown(st.session_state.get("workout_plan", ""), unsafe_allow_html=True)
