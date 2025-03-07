@@ -3,12 +3,12 @@ import sqlite3
 # Define the database file path
 DB_FILE = "user_data.db"
 
-# ✅ Function to Create Database & Tables
+# ✅ Create Database & Tables
 def create_db():
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    # Ensure the users table exists
+    # Users Table
     cursor.execute('''CREATE TABLE IF NOT EXISTS users (
                         user_id TEXT PRIMARY KEY,  
                         age INT, 
@@ -20,14 +20,14 @@ def create_db():
                         experience_level TEXT
                     )''')
 
-    # ✅ Ensure meal_plans table exists
+    # Meal Plans Table
     cursor.execute('''CREATE TABLE IF NOT EXISTS meal_plans (
                         user_id TEXT PRIMARY KEY,  
                         meal_plan TEXT,
                         FOREIGN KEY (user_id) REFERENCES users(user_id)
                     )''')
 
-    # ✅ Ensure workout_plans table exists
+    # Workout Plans Table
     cursor.execute('''CREATE TABLE IF NOT EXISTS workout_plans (
                         user_id TEXT PRIMARY KEY,  
                         workout_plan TEXT,
@@ -37,12 +37,11 @@ def create_db():
     conn.commit()
     conn.close()
 
-# ✅ Function to Save User Data
+# ✅ Save User Data
 def save_user_data(user_id, age, height, weight, goal, diet_type, equipment, experience_level):
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    # Insert user data if not exists, otherwise update
     cursor.execute('''INSERT INTO users (user_id, age, height, weight, goal, diet_type, equipment, experience_level)
                       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
                       ON CONFLICT(user_id) 
@@ -53,37 +52,41 @@ def save_user_data(user_id, age, height, weight, goal, diet_type, equipment, exp
     conn.commit()
     conn.close()
 
-# ✅ Function to Save Meal Plan
+# ✅ Save Meal Plan (as a string)
 def save_meal_plan(user_id, meal_plan):
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    # Replace meal plan if user already has one
+    # Ensure user exists before saving meal plan
+    cursor.execute("INSERT OR IGNORE INTO users (user_id) VALUES (?)", (user_id,))
+
     cursor.execute('''INSERT INTO meal_plans (user_id, meal_plan)
                       VALUES (?, ?)
                       ON CONFLICT(user_id) 
                       DO UPDATE SET meal_plan=?''', 
-                   (user_id, str(meal_plan), str(meal_plan)))
+                   (user_id, meal_plan, meal_plan))
 
     conn.commit()
     conn.close()
 
-# ✅ Function to Save Workout Plan
+# ✅ Save Workout Plan (as a string)
 def save_workout_plan(user_id, workout_plan):
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
 
-    # Replace workout plan if user already has one
+    # Ensure user exists before saving workout plan
+    cursor.execute("INSERT OR IGNORE INTO users (user_id) VALUES (?)", (user_id,))
+
     cursor.execute('''INSERT INTO workout_plans (user_id, workout_plan)
                       VALUES (?, ?)
                       ON CONFLICT(user_id) 
                       DO UPDATE SET workout_plan=?''', 
-                   (user_id, str(workout_plan), str(workout_plan)))
+                   (user_id, workout_plan, workout_plan))
 
     conn.commit()
     conn.close()
 
-# ✅ Function to Retrieve User Data
+# ✅ Retrieve User Data
 def get_user_data(user_id):
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
@@ -92,9 +95,9 @@ def get_user_data(user_id):
     user_data = cursor.fetchone()
     
     conn.close()
-    return user_data  # Returns a tuple of user data
+    return user_data  # Returns a tuple (age, height, weight, ...)
 
-# ✅ Function to Retrieve Meal Plan
+# ✅ Retrieve Meal Plan (as string)
 def get_meal_plan(user_id):
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
@@ -103,7 +106,7 @@ def get_meal_plan(user_id):
     conn.close()
     return meal_plan[0] if meal_plan else None
 
-# ✅ Function to Retrieve Workout Plan
+# ✅ Retrieve Workout Plan (as string)
 def get_workout_plan(user_id):
     conn = sqlite3.connect(DB_FILE)
     cursor = conn.cursor()
