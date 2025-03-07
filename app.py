@@ -46,10 +46,14 @@ with col1:
         workout_plan = generate_workout_routine(goal, equipment, level)
         st.success("✅ Your plan has been successfully generated!")
 
-        # 📊 **Display Meal Plan**
-        st.subheader("🍽️ Personalized Meal Plan")
-        for meal, food_items in meal_plan:
-            st.markdown(f"🍽️ **{meal}:** {food_items}")
+          st.header("🍽️ Personalized Meal Plan")
+        if isinstance(meal_plan, list) and all(isinstance(meal, (list, tuple)) and len(meal) == 2 for meal in meal_plan):
+            for meal, food_items in meal_plan:
+                st.markdown(f"🍽️ **{meal}:** {food_items}")
+        elif isinstance(meal_plan, str):
+            st.markdown(meal_plan)
+        else:
+            st.warning("⚠️ No meal plan generated. Try changing your preferences.")
         
         # 🏋️ **Display Workout Plan**
         st.subheader("💪 Personalized Workout Plan")
